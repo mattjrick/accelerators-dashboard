@@ -1,6 +1,27 @@
-export { auth as middleware } from '@/lib/auth';
+// middleware.ts
+import { getToken } from 'next-auth/jwt';
+import { NextResponse } from 'next/server';
 
-// Don't invoke Middleware on some paths
-export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)']
-};
+export async function middleware(req) {
+  const token = await getToken({ req, secret: process.env.AUTH_SECRET });
+  const { pathname } = req.nextUrl;
+
+  // Allow the request if the following is true
+  // 1. It's a request for next-auth session & provider fetching
+  // 2. the token exists
+  if (pathname.includes('/api/auth') || token) {
+    return NextResponse.next();
+  }
+
+  // Allow components through middleware
+  if (pathname.startsWith('/_next/static')) {
+    return NextResponse.next();
+  }
+
+  // Redirect to login if no token and requesting a protected route
+  if (!token && pathname !== '/login') {
+    const url = req.nextUrl.clone();
+    url.pathname = '/login';
+    return NextResponse.redirect(url);
+  }
+}
