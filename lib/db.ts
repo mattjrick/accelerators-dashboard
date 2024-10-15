@@ -8,6 +8,7 @@ import {
   numeric,
   integer,
   timestamp,
+  json,
   pgEnum,
   serial
 } from 'drizzle-orm/pg-core';
@@ -17,6 +18,12 @@ import { createInsertSchema } from 'drizzle-zod';
 export const db = drizzle(neon(process.env.POSTGRES_URL!));
 
 export const statusEnum = pgEnum('status', ['active', 'inactive', 'archived']);
+
+export const accelerators = pgTable('accelerators', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull(),
+  offerings: json('offerings').notNull(),
+});
 
 export const products = pgTable('products', {
   id: serial('id').primaryKey(),
@@ -30,6 +37,11 @@ export const products = pgTable('products', {
 
 export type SelectProduct = typeof products.$inferSelect;
 export const insertProductSchema = createInsertSchema(products);
+
+export async function getAccelerators() {
+  // log the accelerators
+  return db.select().from(accelerators);
+}
 
 export async function getProducts(
   search: string,
