@@ -13,7 +13,7 @@ export async function GET() {
   //    name: 'Cloud Foundations', 
   //    offerings: ['Core Cloud'], 
   //    status: 'active', 
-  //    effort: 50.00, 
+  //    effort: 50, 
   //    times_used: 10, 
   //    story_branding: {
   //      character: 'Cloud Architect',
@@ -39,7 +39,7 @@ export async function GET() {
   //    name: 'DR Migrate', 
   //    offerings: ['Discovery', 'Datacentre', 'Polycloud'], 
   //    status: 'active', 
-  //    effort: 75.00, 
+  //    effort: 75, 
   //    times_used: 15, 
   //    story_branding: {
   //      character: 'IT Manager',
@@ -65,7 +65,7 @@ export async function GET() {
   //    name: 'Sentinel Migration', 
   //    offerings: ['DevSecOps', 'Secure by Design'], 
   //    status: 'active', 
-  //    effort: 60.00, 
+  //    effort: 60, 
   //    times_used: 8, 
   //    story_branding: {
   //      character: 'Security Officer',
@@ -90,8 +90,8 @@ export async function GET() {
   //    id: 4, 
   //    name: 'Vision Workshop', 
   //    offerings: ['Cloud strategy'], 
-  //    status: 'inactive', 
-  //    effort: 30.00, 
+  //    status: 'draft', 
+  //    effort: 30, 
   //    times_used: 5, 
   //    story_branding: {
   //      character: 'Business Executive',
@@ -116,7 +116,7 @@ export async function GET() {
   //    name: 'Azure Landing Zone', 
   //    offerings: ['Platform', 'Architecture'], 
   //    status: 'active', 
-  //    effort: 80.00, 
+  //    effort: 80, 
   //    times_used: 20, 
   //    story_branding: {
   //      character: 'Cloud Engineer',
@@ -142,7 +142,7 @@ export async function GET() {
   //    name: 'AWS Landing Zone', 
   //    offerings: ['Platform', 'Architecture'], 
   //    status: 'archived', 
-  //    effort: 70.00, 
+  //    effort: 70, 
   //    times_used: 18, 
   //    story_branding: {
   //      character: 'AWS Administrator',
@@ -168,7 +168,7 @@ export async function GET() {
   //    name: 'AEP', 
   //    offerings: ['Automation', 'CICD'], 
   //    status: 'active', 
-  //    effort: 55.00, 
+  //    effort: 55, 
   //    times_used: 12, 
   //    story_branding: {
   //      character: 'DevOps Team',
@@ -194,7 +194,7 @@ export async function GET() {
   //    name: 'Cost Automation', 
   //    offerings: ['FinOps'], 
   //    status: 'active', 
-  //    effort: 40.00, 
+  //    effort: 40, 
   //    times_used: 9, 
   //    story_branding: {
   //      character: 'Finance Officer',
@@ -220,7 +220,7 @@ export async function GET() {
   //    name: 'Green Gauge', 
   //    offerings: ['Carbon Reduction'], 
   //    status: 'active', 
-  //    effort: 20.00, 
+  //    effort: 20, 
   //    times_used: 3, 
   //    story_branding: {
   //      character: 'Sustainability Officer',

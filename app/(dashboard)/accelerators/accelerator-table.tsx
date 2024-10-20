@@ -24,7 +24,7 @@ import { Button } from '@/components/ui/button';
 export function AcceleratorsTable({
   accelerators,
   offset,
-  totalAccelerators
+  totalAccelerators,
 }: {
   accelerators: SelectAccelerator[];
   offset: number;
@@ -34,11 +34,11 @@ export function AcceleratorsTable({
   let acceleratorsPerPage = 5;
 
   function prevPage() {
-    router.back();
+    router.push(`/accelerators?offset=${offset - acceleratorsPerPage}`, { scroll: false });
   }
 
   function nextPage() {
-    router.push(`/accelerators?offset=${offset}`, { scroll: false });
+    router.push(`/accelerators?offset=${offset + acceleratorsPerPage}`, { scroll: false });
   }
 
   return (
@@ -77,7 +77,7 @@ export function AcceleratorsTable({
           <div className="text-xs text-muted-foreground">
             Showing{' '}
             <strong>
-              {Math.min(offset - acceleratorsPerPage, totalAccelerators) + 1}-{offset}
+              {totalAccelerators === 0 ? 0 : offset + 1}-{Math.min(offset + acceleratorsPerPage, totalAccelerators)}
             </strong>{' '}
             of <strong>{totalAccelerators}</strong> accelerators
           </div>
@@ -87,7 +87,7 @@ export function AcceleratorsTable({
               variant="ghost"
               size="sm"
               type="submit"
-              disabled={offset === acceleratorsPerPage}
+              disabled={offset < acceleratorsPerPage}
             >
               <ChevronLeft className="mr-2 h-4 w-4" />
               Prev
@@ -97,7 +97,7 @@ export function AcceleratorsTable({
               variant="ghost"
               size="sm"
               type="submit"
-              disabled={offset + acceleratorsPerPage > totalAccelerators}
+              disabled={offset + acceleratorsPerPage >= totalAccelerators}
             >
               Next
               <ChevronRight className="ml-2 h-4 w-4" />

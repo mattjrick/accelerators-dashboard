@@ -31,7 +31,7 @@ During the deployment, Vercel will prompt you to create a new Postgres database.
 Inside the Vercel Postgres dashboard, create a table based on the schema defined in this repository.
 
 ```
-CREATE TYPE status AS ENUM ('active', 'inactive', 'archived');
+CREATE TYPE statusEnum AS ENUM ('active', 'draft', 'archived');
 
 CREATE TABLE accelerators (
   id SERIAL PRIMARY KEY,
@@ -42,7 +42,7 @@ CREATE TABLE accelerators (
   last_updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   offerings JSON NOT NULL,
   status statusEnum NOT NULL,
-  effort NUMERIC(10, 2) NOT NULL,
+  effort INTEGER NOT NULL,
   times_used INTEGER NOT NULL,
   story_branding JSON,
   marketing JSON,

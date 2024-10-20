@@ -4,11 +4,12 @@ import { Button } from '@/components/ui/button';
 import { AcceleratorsTable } from './accelerator-table';
 import { searchAccelerators } from '@/lib/db';
 
-export default async function ProductsPage({
-  searchParams
-}: {
-  searchParams: { q: string; offset: string };
-}) {
+export default async function AcceleratorsPage(
+  props: {
+    searchParams: Promise<{ q: string; offset: string }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   const search = searchParams.q ?? '';
   const offset = searchParams.offset ?? 0;
   const { accelerators, newOffset, totalAccelerators } = await searchAccelerators(

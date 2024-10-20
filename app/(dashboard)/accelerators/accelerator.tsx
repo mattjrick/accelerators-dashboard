@@ -11,7 +11,7 @@ import {
 import { MoreHorizontal } from 'lucide-react';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { SelectAccelerator } from '@/lib/db';
-import { deleteProduct } from '../actions';
+import { deleteAccelerator } from './actions';
 
 export function Accelerator({ accelerators }: { accelerators: SelectAccelerator }) {
   return (
@@ -39,7 +39,7 @@ export function Accelerator({ accelerators }: { accelerators: SelectAccelerator 
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem>Edit</DropdownMenuItem>
             <DropdownMenuItem>
-              <form action={deleteProduct}>
+              <form action={deleteAccelerator}>
                 <button type="submit">Delete</button>
               </form>
             </DropdownMenuItem>
