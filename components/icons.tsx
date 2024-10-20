@@ -108,7 +108,7 @@ export function Logo() {
   );
 }
 
-export function VercelLogo(props: React.SVGProps<SVGSVGElement>) {
+export function KainosLogo(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

@@ -1,8 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { File, PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ProductsTable } from './products-table';
-import { getProducts } from '@/lib/db';
+import { AcceleratorsTable } from './accelerator-table';
+import { searchAccelerators } from '@/lib/db';
 
 export default async function ProductsPage({
   searchParams
@@ -11,7 +11,7 @@ export default async function ProductsPage({
 }) {
   const search = searchParams.q ?? '';
   const offset = searchParams.offset ?? 0;
-  const { products, newOffset, totalProducts } = await getProducts(
+  const { accelerators, newOffset, totalAccelerators } = await searchAccelerators(
     search,
     Number(offset)
   );
@@ -37,16 +37,16 @@ export default async function ProductsPage({
           <Button size="sm" className="h-8 gap-1">
             <PlusCircle className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Add Product
+              Add Accelerator
             </span>
           </Button>
         </div>
       </div>
       <TabsContent value="all">
-        <ProductsTable
-          products={products}
+        <AcceleratorsTable
+          accelerators={accelerators}
           offset={newOffset ?? 0}
-          totalProducts={totalProducts}
+          totalAccelerators={totalAccelerators}
         />
       </TabsContent>
     </Tabs>

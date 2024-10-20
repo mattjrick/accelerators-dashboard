@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import {
   Home,
   LineChart,
@@ -22,7 +21,7 @@ import {
 } from '@/components/ui/tooltip';
 import { Analytics } from '@vercel/analytics/react';
 import { User } from './user';
-import { VercelLogo } from '@/components/icons';
+import { KainosLogo } from '@/components/icons';
 import Providers from './providers';
 import { NavItem } from '../../components/ui/nav-item';
 import { SearchInput } from '../../components/ui/search';
@@ -58,11 +57,11 @@ function DesktopNav() {
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
         <Link
-          href="https://vercel.com/templates/next.js/admin-dashboard-tailwind-postgres-react-nextjs"
+          href="https://kainos.com"
           className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
         >
-          <VercelLogo className="h-3 w-3 transition-all group-hover:scale-110" />
-          <span className="sr-only">Acme Inc</span>
+          <KainosLogo className="h-3 w-3 transition-all group-hover:scale-110" />
+          <span className="sr-only">Kainos Software Ltd</span>
         </Link>
 
         <NavItem href="/" label="Dashboard">

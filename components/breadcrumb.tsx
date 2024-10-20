@@ -1,6 +1,6 @@
 "use client"
 
-import { useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import {
   Breadcrumb,
@@ -11,23 +11,28 @@ import {
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb';
 
+// Utility function to capitalize the first letter of a string
+function capitalizeFirstLetter(string: string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 function DashboardBreadcrumb() {
-  const searchParams = useSearchParams();
-  const path = searchParams.get('path') || '';
-  const pathSegments = path.split('/').filter(Boolean);
+  const pathname = usePathname();
+  const pathSegments = pathname.split('/').filter(Boolean);
 
   const breadcrumbItems = pathSegments.map((segment: string, index: number) => {
     const href = '/' + pathSegments.slice(0, index + 1).join('/');
     const isLast = index === pathSegments.length - 1;
+    const capitalizedSegment = capitalizeFirstLetter(segment);
 
     return (
       <BreadcrumbItem key={href}>
         {isLast ? (
-          <BreadcrumbPage>{segment}</BreadcrumbPage>
+          <BreadcrumbPage>{capitalizedSegment}</BreadcrumbPage>
         ) : (
           <>
             <BreadcrumbLink asChild>
-              <Link href={href}>{segment}</Link>
+              <Link href={href}>{capitalizedSegment}</Link>
             </BreadcrumbLink>
             <BreadcrumbSeparator />
           </>

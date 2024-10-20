@@ -33,14 +33,20 @@ Inside the Vercel Postgres dashboard, create a table based on the schema defined
 ```
 CREATE TYPE status AS ENUM ('active', 'inactive', 'archived');
 
-CREATE TABLE products (
+CREATE TABLE accelerators (
   id SERIAL PRIMARY KEY,
-  image_url TEXT NOT NULL,
   name TEXT NOT NULL,
-  status status NOT NULL,
-  price NUMERIC(10, 2) NOT NULL,
-  stock INTEGER NOT NULL,
-  available_at TIMESTAMP NOT NULL
+  created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_by TEXT NOT NULL,
+  last_updated_by TEXT,
+  last_updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  offerings JSON NOT NULL,
+  status statusEnum NOT NULL,
+  effort NUMERIC(10, 2) NOT NULL,
+  times_used INTEGER NOT NULL,
+  story_branding JSON,
+  marketing JSON,
+  links JSON
 );
 ```
 

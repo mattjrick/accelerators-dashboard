@@ -1,9 +1,9 @@
-import { getAccelerators } from '@/lib/db';
+import { acceleratorGraphView } from '@/lib/db';
 import { HomepageComponent } from "@/components/graph"
 
 // Get accelerators from the database
 async function fetchAccelerators() {
-	return await getAccelerators() || []
+	return await acceleratorGraphView() || []
 }
 
 export default function Page() {
