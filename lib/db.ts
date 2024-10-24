@@ -5,7 +5,6 @@ import { drizzle } from 'drizzle-orm/neon-http';
 import {
   pgTable,
   text,
-  numeric,
   integer,
   timestamp,
   json,
@@ -13,7 +12,8 @@ import {
   serial
 } from 'drizzle-orm/pg-core';
 import { count, eq, ilike } from 'drizzle-orm';
-import { createInsertSchema } from 'drizzle-zod';
+//import { createInsertSchema } from 'drizzle-zod';
+//import { z } from 'zod';
 
 export const db = drizzle(neon(process.env.POSTGRES_URL!));
 
@@ -23,29 +23,51 @@ export const statusEnum = pgEnum('status', ['active', 'draft', 'archived']);
 export const accelerators = pgTable('accelerators', {
   id: serial('id').primaryKey(),
   name: text('name').notNull(),
+  description: text('description').notNull(),
   createdDate: timestamp('created_date').notNull(),
   createdBy: text('created_by').notNull(),
   lastUpdatedBy: text('last_updated_by'),
   lastUpdatedDate: timestamp('last_updated_date'),
-  offerings: json('offerings').notNull(),
+  linkedService: text('linked_service').notNull(),
+  linkedAccelerators: json('linked_accelerators'),
   status: statusEnum('status').notNull(),
   effort: integer('effort').notNull(),
   timesUsed: integer('times_used').notNull(),
   storyBranding: json('story_branding'),
-  marketing: json('marketing'),
   links: json('links')
 });
 
 export type SelectAccelerator = typeof accelerators.$inferSelect;
-export const insertAcceleratorSchema = createInsertSchema(accelerators);
 
+//export const insertAcceleratorSchema = createInsertSchema(accelerators);
+//
+//// Define the type for the accelerator
+//type Accelerator = z.infer<typeof insertAcceleratorSchema>;
+//
+//// Function to add a new accelerator
+//export async function addAccelerator(accelerator: Accelerator): Promise<Accelerator> {
+//  // Validate the input data using the insert schema
+//  const validatedAccelerator = insertAcceleratorSchema.parse(accelerator);
+//
+//  // Insert the new accelerator into the database
+//  const [newAccelerator] = await db.insert(accelerators).values(validatedAccelerator).returning();
+//
+//  return newAccelerator;
+//}
+
+type NewAccelerator = typeof accelerators.$inferInsert;
+
+export async function addAccelerator(accelerator: NewAccelerator) {
+  let newAccelerator = await db.insert(accelerators).values(accelerator);
+  return newAccelerator;
+}
 
 export async function acceleratorGraphView() {
   // get only the fields required for graph view
   let acceleratorGraphView = await db.select({
     id: accelerators.id,
     name: accelerators.name,
-    offerings: accelerators.offerings
+    services: accelerators.linked_service,
   }).from(accelerators);
 
   // return the acceleratorGraphView
@@ -56,6 +78,12 @@ export async function acceleratorGraphView() {
 export async function getAcceleratorById(id: number) {
   let accelerator = await db.select().from(accelerators).where(eq(accelerators.id, id));
   return accelerator[0];
+}
+
+// Update an existing accelerator
+export async function updateAccelerator(accelerator: SelectAccelerator) {
+  let updatedAccelerator = await db.update(accelerators).set(accelerator).where(eq(accelerators.id, accelerator.id));
+  return updatedAccelerator;
 }
 
 // Create a search function for the accelerators and 

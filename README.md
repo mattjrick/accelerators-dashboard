@@ -36,16 +36,17 @@ CREATE TYPE statusEnum AS ENUM ('active', 'draft', 'archived');
 CREATE TABLE accelerators (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
+  description TEXT NOT NULL,
   created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   created_by TEXT NOT NULL,
   last_updated_by TEXT,
   last_updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  offerings JSON NOT NULL,
+  linked_service TEXT,
+  linked_accelerators JSON,
   status statusEnum NOT NULL,
   effort INTEGER NOT NULL,
   times_used INTEGER NOT NULL,
   story_branding JSON,
-  marketing JSON,
   links JSON
 );
 ```

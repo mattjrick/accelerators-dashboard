@@ -21,7 +21,7 @@ type Link = {
 };
 
 type HomepageComponentProps = {
-  accelerators: Promise<{ id: number; name: string; offerings: string[] }[]>;
+  accelerators: Promise<{ id: number; name: string; linked_service: string }[]>;
 };
 
 export function HomepageComponent({ accelerators }: HomepageComponentProps) {
@@ -36,11 +36,9 @@ export function HomepageComponent({ accelerators }: HomepageComponentProps) {
         // Add the accelerator as a node
         nodes.push({ id: `name-${accelerator.id}`, name: accelerator.name, group: 'name' });
 
-        // Add each offering as a node and create a link
-        accelerator.offerings.forEach(offering => {
-          nodes.push({ id: `offering-${offering}`, name: offering, group: 'offering' });
-          links.push({ source: `name-${accelerator.id}`, target: `offering-${offering}` });
-        });
+        // Add the linked service as a node and create a link
+        nodes.push({ id: `offering-${accelerator.linked_service}`, name: accelerator.linked_service, group: 'offering' });
+        links.push({ source: `name-${accelerator.id}`, target: `offering-${accelerator.linked_service}` });
       });
 
       setGraphData({ nodes, links });

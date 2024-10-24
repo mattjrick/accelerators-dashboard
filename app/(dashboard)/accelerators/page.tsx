@@ -1,8 +1,17 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { File, PlusCircle } from 'lucide-react';
+import { 
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs';
+import { 
+  File,
+  PlusCircle 
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AcceleratorsTable } from './accelerator-table';
 import { searchAccelerators } from '@/lib/db';
+import AcceleratorDialogButton from './accelerator-dialog-button';
 
 export default async function AcceleratorsPage(
   props: {
@@ -35,12 +44,7 @@ export default async function AcceleratorsPage(
               Export
             </span>
           </Button>
-          <Button size="sm" className="h-8 gap-1">
-            <PlusCircle className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Add Accelerator
-            </span>
-          </Button>
+          <AcceleratorDialogButton />
         </div>
       </div>
       <TabsContent value="all">
