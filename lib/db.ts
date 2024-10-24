@@ -67,7 +67,8 @@ export async function acceleratorGraphView() {
   let acceleratorGraphView = await db.select({
     id: accelerators.id,
     name: accelerators.name,
-    services: accelerators.linked_service,
+    linkedService: accelerators.linkedService,
+    linkedAccelerators: accelerators.linkedAccelerators,
   }).from(accelerators);
 
   // return the acceleratorGraphView
@@ -92,6 +93,7 @@ export async function searchAccelerators(
   offset: number
 ): Promise<{
   accelerators: SelectAccelerator[];
+  acceleratorNames?: { name: string }[];
   newOffset: number;
   totalAccelerators: number;
 }> {
@@ -106,19 +108,28 @@ export async function searchAccelerators(
       .where(ilike(accelerators.name, `%${search}%`))
       .limit(5)
       .offset(offset);
+    // Return all the names of the accelerators in the database as a list
+    let allAcceleratorNames = await db.select({ name: accelerators.name })
+        .from(accelerators);
 
     return {
       accelerators: moreAccelerators,
+      acceleratorNames: allAcceleratorNames,
       newOffset: offset,
       totalAccelerators: totalAccelerators[0].count
     };
   }
 
+  // Return the total number of accelerators
   let totalAccelerators = await db.select({ count: count() }).from(accelerators);
+  // Return all the names of the accelerators in the database as a list
+  let allAcceleratorNames = await db.select({ name: accelerators.name }).from(accelerators);
+  // Return the first 5 accelerators
   let moreAccelerators = await db.select().from(accelerators).limit(5).offset(offset);
 
   return {
     accelerators: moreAccelerators,
+    acceleratorNames: allAcceleratorNames,
     newOffset: offset,
     totalAccelerators: totalAccelerators[0].count
   };

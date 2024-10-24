@@ -73,7 +73,7 @@ export function Accelerator({ accelerators }: { accelerators: SelectAccelerator 
       </TableCell>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[1200px]">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Accelerator</DialogTitle>
             <DialogDescription>Update your accelerator</DialogDescription>

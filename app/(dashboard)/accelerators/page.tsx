@@ -21,7 +21,7 @@ export default async function AcceleratorsPage(
   const searchParams = await props.searchParams;
   const search = searchParams.q ?? '';
   const offset = searchParams.offset ?? 0;
-  const { accelerators, newOffset, totalAccelerators } = await searchAccelerators(
+  const { accelerators, newOffset, totalAccelerators, acceleratorNames } = await searchAccelerators(
     search,
     Number(offset)
   );
@@ -44,7 +44,7 @@ export default async function AcceleratorsPage(
               Export
             </span>
           </Button>
-          <AcceleratorDialogButton />
+          <AcceleratorDialogButton acceleratorNames={acceleratorNames}/>
         </div>
       </div>
       <TabsContent value="all">
@@ -52,6 +52,7 @@ export default async function AcceleratorsPage(
           accelerators={accelerators}
           offset={newOffset ?? 0}
           totalAccelerators={totalAccelerators}
+          acceleratorNames={acceleratorNames}
         />
       </TabsContent>
     </Tabs>

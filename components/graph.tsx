@@ -10,7 +10,7 @@ const ForceGraph2D = dynamic(() => import('react-force-graph').then(mod => mod.F
 type Node = {
   id: string;
   name: string;
-  group: 'name' | 'offering';
+  group: 'linkedService' | 'name';
   x?: number;
   y?: number;
 };
@@ -21,10 +21,10 @@ type Link = {
 };
 
 type HomepageComponentProps = {
-  accelerators: Promise<{ id: number; name: string; linked_service: string }[]>;
+  accelerators: Promise<{ id: number; name: string; linkedService: string; linkedAccelerators: string[] }[]>;
 };
 
-export function HomepageComponent({ accelerators }: HomepageComponentProps) {
+export function GraphComponent({ accelerators }: GraphComponentProps) {
   const [graphData, setGraphData] = useState<{ nodes: Node[], links: Link[] }>({ nodes: [], links: [] });
 
   useEffect(() => {
@@ -37,8 +37,18 @@ export function HomepageComponent({ accelerators }: HomepageComponentProps) {
         nodes.push({ id: `name-${accelerator.id}`, name: accelerator.name, group: 'name' });
 
         // Add the linked service as a node and create a link
-        nodes.push({ id: `offering-${accelerator.linked_service}`, name: accelerator.linked_service, group: 'offering' });
-        links.push({ source: `name-${accelerator.id}`, target: `offering-${accelerator.linked_service}` });
+        if (!nodes.find(node => node.id === `linkedService-${accelerator.linkedService}`)) {
+          nodes.push({ id: `linkedService-${accelerator.linkedService}`, name: accelerator.linkedService, group: 'linkedService' });
+        }
+        links.push({ source: `linkedService-${accelerator.linkedService}`, target: `name-${accelerator.id}` });
+
+        // Add linked accelerators as nodes and create links
+        accelerator.linkedAccelerators.forEach(linkedAccelerator => {
+          if (!nodes.find(node => node.id === `name-${linkedAccelerator}`)) {
+            nodes.push({ id: `name-${linkedAccelerator}`, name: linkedAccelerator, group: 'name' });
+          }
+          links.push({ source: `name-${accelerator.id}`, target: `name-${linkedAccelerator}` });
+        });
       });
 
       setGraphData({ nodes, links });

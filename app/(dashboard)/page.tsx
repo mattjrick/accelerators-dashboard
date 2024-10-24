@@ -1,5 +1,5 @@
 import { acceleratorGraphView } from '@/lib/db';
-import { HomepageComponent } from "@/components/graph"
+import { GraphComponent } from "@/components/graph"
 
 // Get accelerators from the database
 async function fetchAccelerators() {
@@ -9,6 +9,6 @@ async function fetchAccelerators() {
 export default function Page() {
   let acceleratorData = fetchAccelerators()
   return (
-    <HomepageComponent accelerators={acceleratorData}/>
+    <GraphComponent accelerators={acceleratorData}/>
   )
 }

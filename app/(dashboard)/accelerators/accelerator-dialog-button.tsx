@@ -9,7 +9,11 @@ import {
   DialogContent
 } from "@/components/ui/dialog";
 
-const AcceleratorDialogButton = () => {
+interface AcceleratorDialogButtonProps {
+  acceleratorNames: string[];
+}
+
+const AcceleratorDialogButton: React.FC<AcceleratorDialogButtonProps> = ({ acceleratorNames }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const openDialog = () => setIsDialogOpen(true);
@@ -23,8 +27,8 @@ const AcceleratorDialogButton = () => {
       </span>
     </Button>
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <DialogContent className="sm:max-w-[1200px]">
-        <AcceleratorDialog />
+      <DialogContent>
+        <AcceleratorDialog acceleratorNames={acceleratorNames} />
       </DialogContent>
     </Dialog>
   </>
