@@ -1,5 +1,3 @@
-'use client'
-
 import { useState, useEffect } from 'react';
 import {
   DialogFooter,
@@ -11,6 +9,7 @@ import OverviewTabsContent from '@/components/acceleratorform/overviewtabsconten
 import StoryBrandTabsContent from "@/components/acceleratorform/storybrandtabscontent";
 import LinksTabsContent from "@/components/acceleratorform/linkstabcontent";
 import { addAcceleratorFromForm, updateAcceleratorFromForm, getAccelerator } from './actions';
+import { Spinner } from '@/components/icons';
 
 export function AcceleratorDialog({ onClose, isEditMode = false, selectedItemId = null, acceleratorNames }) {
   const [formState, setFormState] = useState({
@@ -45,6 +44,7 @@ export function AcceleratorDialog({ onClose, isEditMode = false, selectedItemId 
   });
 
   const [activeCharacter, setActiveCharacter] = useState(0);
+  const [loading, setLoading] = useState(isEditMode); // Initialize loading state
 
   useEffect(() => {
     if (isEditMode && selectedItemId) {
@@ -54,11 +54,16 @@ export function AcceleratorDialog({ onClose, isEditMode = false, selectedItemId 
           setFormState((prevState) => ({
             ...prevState,
             ...data,
-            story_branding: data.storyBranding || prevState.story_branding,
+            linked_accelerators: data.linkedAccelerators || prevState.linked_accelerators,
+            linked_service: data.linkedService || prevState.linked_service,
+            times_used: data.timesUsed || prevState.times_used,
+            story_branding: data.storyBranding ? { characters: data.storyBranding.characters || prevState.story_branding.characters } : prevState.story_branding,
             links: data.links || prevState.links,
           }));
         } catch (error) {
           console.error('Failed to fetch accelerator data:', error);
+        } finally {
+          setLoading(false); // Set loading to false after data is fetched
         }
       };
 
@@ -169,17 +174,22 @@ export function AcceleratorDialog({ onClose, isEditMode = false, selectedItemId 
     }
   };
 
+  if (loading) {
+    return (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <Spinner />
+    </div>
+    );
+  }
+
   return (
-    console.log(acceleratorNames),
-    <form onSubmit={handleSubmit} className="flex flex-col h-full">
-      <Tabs defaultValue="overview" className="flex flex-col h-full">
+    <form onSubmit={handleSubmit} className="flex flex-col h-[90%]">
+      <Tabs defaultValue="overview" className="flex flex-col h-[90%]">
         <TabsList className="w-full grid grid-cols-3">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="storybranding">Storybranding</TabsTrigger>
           <TabsTrigger value="links">Links</TabsTrigger>
         </TabsList>
-
-        <div className="flex-grow overflow-hidden">
           <ScrollArea className="h-full">
             <div className="p-6 space-y-6">
 
@@ -207,12 +217,10 @@ export function AcceleratorDialog({ onClose, isEditMode = false, selectedItemId 
               />
             </div>
           </ScrollArea>
-        </div>
-
-        <DialogFooter className="mt-4">
-          <Button type="submit">{isEditMode ? 'Update' : 'Create'}</Button>
-        </DialogFooter>
       </Tabs>
+      <DialogFooter className="mt-4">
+        <Button type="submit">{isEditMode ? 'Update' : 'Create'}</Button>
+      </DialogFooter>
     </form>
   );
 }

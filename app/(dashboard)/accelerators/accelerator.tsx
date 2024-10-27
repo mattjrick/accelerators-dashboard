@@ -23,7 +23,11 @@ import { SelectAccelerator } from '@/lib/db';
 import { deleteAccelerator } from './actions';
 import { AcceleratorDialog } from './accelerator-form';
 
-export function Accelerator({ accelerators }: { accelerators: SelectAccelerator }) {
+interface AcceleratorProps {
+  accelerators: SelectAccelerator;
+  acceleratorNames: { name: string }[];
+}
+export function Accelerator({ accelerators, acceleratorNames }: AcceleratorProps) {
   
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -82,6 +86,7 @@ export function Accelerator({ accelerators }: { accelerators: SelectAccelerator 
             selectedItemId={accelerators.id}
             isEditMode={true}
             onClose={handleCloseDialog}
+            acceleratorNames={acceleratorNames}
           />
         </DialogContent>
       </Dialog>

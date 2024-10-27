@@ -69,7 +69,7 @@ export function AcceleratorsTable({
           </TableHeader>
           <TableBody>
             {accelerators.map((accelerators) => (
-              <Accelerator key={accelerators.id} accelerators={accelerators} />
+              <Accelerator key={accelerators.id} accelerators={accelerators} acceleratorNames={acceleratorNames} />
             ))}
           </TableBody>
         </Table>

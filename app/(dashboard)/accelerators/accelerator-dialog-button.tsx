@@ -6,7 +6,10 @@ import { PlusCircle } from 'lucide-react';
 import { AcceleratorDialog } from './accelerator-form';
 import {
   Dialog,
-  DialogContent
+  DialogContent,
+  DialogHeader,
+  DialogDescription,
+  DialogTitle
 } from "@/components/ui/dialog";
 
 interface AcceleratorDialogButtonProps {
@@ -28,6 +31,10 @@ const AcceleratorDialogButton: React.FC<AcceleratorDialogButtonProps> = ({ accel
     </Button>
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Create an Accelerator</DialogTitle>
+          <DialogDescription>Create your accelerator</DialogDescription>
+        </DialogHeader>
         <AcceleratorDialog acceleratorNames={acceleratorNames} />
       </DialogContent>
     </Dialog>

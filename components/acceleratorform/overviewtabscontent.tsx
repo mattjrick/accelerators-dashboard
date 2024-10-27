@@ -2,10 +2,10 @@ import React from 'react';
 import { TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { MultiSelect } from "@/components/ui/multi-select";
 
 interface OverviewTabsContentProps {
   formState: {
@@ -18,10 +18,24 @@ interface OverviewTabsContentProps {
     linked_accelerators: string[];
   };
   handleInputChange: (field: string, value: any) => void;
-  acceleratorNames: string[];
+  acceleratorNames?: { name: string }[];
 }
 
-const OverviewTabsContent: React.FC<OverviewTabsContentProps> = ({ formState, handleInputChange, acceleratorNames }) => {
+const OverviewTabsContent: React.FC<OverviewTabsContentProps> = ({ formState, handleInputChange, acceleratorNames = [] }) => {
+  const handleLinkedAcceleratorsChange = (selectedAccelerators: string[]) => {
+    handleInputChange('linked_accelerators', selectedAccelerators);
+  };
+
+  const available_services = [
+    { value: "Core Cloud", label: "Core Cloud" },
+    { value: "Discovery", label: "Discovery" },
+    { value: "Secure by Design", label: "Secure by Design" },
+    { value: "Cloud strategy", label: "Cloud strategy" },
+    { value: "Platform", label: "Platform" },
+    { value: "Automation", label: "Automation" },
+    { value: "FinOps", label: "FinOps" },
+  ];
+
   return (
     <TabsContent value="overview">
       <Card>
@@ -40,11 +54,21 @@ const OverviewTabsContent: React.FC<OverviewTabsContentProps> = ({ formState, ha
             </div>
             <div className="space-y-2">
               <Label htmlFor="linked_service">Linked Service</Label>
-              <Input
-                id="linked_service"
-                value={formState.linked_service}
-                onChange={(e) => handleInputChange('linked_service', e.target.value)}
-              />
+              <Select
+                onValueChange={(value) => handleInputChange('linked_service', value)}
+                defaultValue={formState.linked_service}
+              >
+                <SelectTrigger id="linked_service">
+                  <SelectValue placeholder="Select a service" />
+                </SelectTrigger>
+                <SelectContent>
+                  {available_services.map(service => (
+                    <SelectItem key={service.value} value={service.value}>
+                      {service.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <div className="space-y-2">
@@ -67,7 +91,7 @@ const OverviewTabsContent: React.FC<OverviewTabsContentProps> = ({ formState, ha
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="effort">Times Used</Label>
+              <Label htmlFor="times_used">Times Used</Label>
               <Input
                 id="times_used"
                 type="number"
@@ -93,25 +117,14 @@ const OverviewTabsContent: React.FC<OverviewTabsContentProps> = ({ formState, ha
             </div>
           </div>
           <div className="space-y-2">
-            <Label>Linked Accelerators</Label>
-            {formState.linked_accelerators.map((accelerator, index) => (
-              <div key={index} className="flex items-center gap-2">
-                <Input
-                  value={accelerator}
-                  onChange={(e) => {
-                    const newAccelerators = [...formState.linked_accelerators];
-                    newAccelerators[index] = e.target.value;
-                    handleInputChange('linked_accelerators', newAccelerators);
-                  }}
-                  placeholder="Enter accelerator"
-                />
-                {index === formState.linked_accelerators.length - 1 && (
-                  <Button type="button" onClick={() => handleInputChange('linked_accelerators', [...formState.linked_accelerators, ''])}>
-                    Add
-                  </Button>
-                )}
-              </div>
-            ))}
+            <Label htmlFor="linked_accelerators">Linked Accelerators</Label>
+            <MultiSelect
+              options={acceleratorNames.map(a => ({ label: a.name, value: a.name }))}
+              onValueChange={handleLinkedAcceleratorsChange}
+              defaultValue={formState.linked_accelerators}
+              placeholder="Select linked accelerators"
+              className="w-full"
+            />
           </div>
         </CardContent>
       </Card>
