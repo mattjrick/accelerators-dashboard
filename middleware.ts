@@ -4,7 +4,11 @@ import { NextResponse } from 'next/server';
 import { NextRequest } from 'next/server';
 
 export async function middleware(req: NextRequest) {
-  const token = await getToken({ req, secret: process.env.AUTH_SECRET });
+  const token = await getToken({ 
+    req, 
+    secret: process.env.AUTH_SECRET, 
+    secureCookie: true 
+  });
   const { pathname } = req.nextUrl;
 
   console.log("Activated middleware" + JSON.stringify(token, null, 2));
