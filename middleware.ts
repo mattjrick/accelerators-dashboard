@@ -7,6 +7,8 @@ export async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.AUTH_SECRET });
   const { pathname } = req.nextUrl;
 
+  console.log("Activated middleware" + JSON.stringify(token, null, 2));
+
   // Allow the request if the following is true
   // 1. It's a request for next-auth session & provider fetching
   // 2. the token exists
@@ -21,6 +23,7 @@ export async function middleware(req: NextRequest) {
 
   // Redirect to login if no token and requesting a protected route
   if (!token && pathname !== '/login') {
+    console.log("redirected:" + JSON.stringify(token,null, 2));
     const url = req.nextUrl.clone();
     url.pathname = '/login';
     return NextResponse.redirect(url);
