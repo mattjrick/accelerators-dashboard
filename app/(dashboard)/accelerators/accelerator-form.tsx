@@ -10,17 +10,31 @@ import StoryBrandTabsContent from "@/components/acceleratorform/storybrandtabsco
 import LinksTabsContent from "@/components/acceleratorform/linkstabcontent";
 import { addAcceleratorFromForm, updateAcceleratorFromForm, getAccelerator } from './actions';
 import { Spinner } from '@/components/icons';
+import { AcceleratorFormState } from '@/types/accelerator';
+import { Character } from '@/types/storybrand';
 
-export function AcceleratorDialog({ onClose, isEditMode = false, selectedItemId = null, acceleratorNames }) {
-  const [formState, setFormState] = useState({
+interface AcceleratorDialogProps {
+  onClose: () => void;
+  isEditMode?: boolean;
+  selectedItemId?: number | null;
+  acceleratorNames: { name: string }[];
+}
+
+export function AcceleratorDialog({
+  onClose,
+  isEditMode = false,
+  selectedItemId = null,
+  acceleratorNames,
+}: AcceleratorDialogProps) {
+  const [formState, setFormState] = useState<AcceleratorFormState>({
     name: '',
     description: '',
-    linked_service: '',
-    linked_accelerators: [''],
+    linkedService: '',
+    linkedAccelerators: [],
     status: 'active',
     effort: 0,
-    times_used: 0,
-    story_branding: {
+    timesUsed: 0,
+    storyBranding: {
       characters: [
         {
           character: '',
@@ -43,7 +57,6 @@ export function AcceleratorDialog({ onClose, isEditMode = false, selectedItemId 
     links: {},
   });
 
-  const [activeCharacter, setActiveCharacter] = useState(0);
   const [loading, setLoading] = useState(isEditMode); // Initialize loading state
 
   useEffect(() => {
@@ -51,78 +64,35 @@ export function AcceleratorDialog({ onClose, isEditMode = false, selectedItemId 
       const fetchData = async () => {
         try {
           const data = await getAccelerator(selectedItemId);
-          setFormState((prevState) => ({
-            ...prevState,
+          const formattedData: AcceleratorFormState = {
             ...data,
-            linked_accelerators: data.linkedAccelerators || prevState.linked_accelerators,
-            linked_service: data.linkedService || prevState.linked_service,
-            times_used: data.timesUsed || prevState.times_used,
-            story_branding: data.storyBranding ? { characters: data.storyBranding.characters || prevState.story_branding.characters } : prevState.story_branding,
-            links: data.links || prevState.links,
+            storyBranding: data.storyBranding as { characters: Character[] },
+            links: data.links as Record<string, string>,
+          };
+          setFormState((prevState: AcceleratorFormState) => ({
+            ...prevState,
+            ...formattedData,
           }));
         } catch (error) {
-          console.error('Failed to fetch accelerator data:', error);
+          console.error('Failed to fetch accelerator data');
         } finally {
           setLoading(false); // Set loading to false after data is fetched
         }
       };
-
+  
       fetchData();
     }
   }, [isEditMode, selectedItemId]);
 
-  const handleInputChange = (field, value) => {
+  const handleInputChange = (field: string, value: any) => {
     setFormState({
       ...formState,
       [field]: value,
     });
   };
 
-  const handleCharacterChange = (index, field, value) => {
-    const newCharacters = [...formState.story_branding.characters];
-    newCharacters[index] = {
-      ...newCharacters[index],
-      [field]: value,
-    };
-    setFormState({
-      ...formState,
-      story_branding: {
-        ...formState.story_branding,
-        characters: newCharacters,
-      },
-    });
-  };
 
-  const handleAddCharacter = () => {
-    setFormState({
-      ...formState,
-      story_branding: {
-        ...formState.story_branding,
-        characters: [
-          ...formState.story_branding.characters,
-          {
-            character: '',
-            want: '',
-            externalProblem: '',
-            internalProblem: '',
-            philosophicalProblem: '',
-            empathyStatement: '',
-            authorityStatement: '',
-            plan: '',
-            callToActions: '',
-            avoidFailure: '',
-            successLooksLike: '',
-            oneLiner: '',
-            elevatorPitch: '',
-            landingPage: '',
-          },
-        ],
-      },
-    });
-    setActiveCharacter(formState.story_branding.characters.length);
-  };
-
-  const handleLinkChange = (key, value) => {
+  const handleLinkChange = (key: string, value: any) => {
     setFormState((prevState) => ({
       ...prevState,
       links: {
@@ -142,26 +112,21 @@ export function AcceleratorDialog({ onClose, isEditMode = false, selectedItemId 
     }));
   };
 
-  const handleRemoveLink = (key) => {
+  const handleRemoveLink = (key: string) => {
     setFormState((prevState) => {
       const newLinks = { ...prevState.links };
-      delete newLinks[key];
+      delete newLinks[key as keyof typeof newLinks];
       return { ...prevState, links: newLinks };
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!formState.name || formState.linked_accelerators.some(accelerator => !accelerator)) {
-      alert("Please fill out all required fields.");
-      return;
-    }
 
     const formData = {
       ...formState,
     };
-
+    console.log(formData);
     try {
       if (isEditMode) {
         await updateAcceleratorFromForm(formData);
@@ -183,6 +148,7 @@ export function AcceleratorDialog({ onClose, isEditMode = false, selectedItemId 
   }
 
   return (
+    console.log(acceleratorNames),
     <form onSubmit={handleSubmit} className="flex flex-col h-[90%]">
       <Tabs defaultValue="overview" className="flex flex-col h-[90%]">
         <TabsList className="w-full grid grid-cols-3">
@@ -201,11 +167,8 @@ export function AcceleratorDialog({ onClose, isEditMode = false, selectedItemId 
 
               
               <StoryBrandTabsContent
-                activeCharacter={activeCharacter}
                 formState={formState}
-                handleAddCharacter={handleAddCharacter}
-                handleCharacterChange={handleCharacterChange}
-                setActiveCharacter={setActiveCharacter}
+                setFormState={setFormState}
               />
 
               <LinksTabsContent

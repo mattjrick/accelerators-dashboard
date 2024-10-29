@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,39 +6,63 @@ import { PlusCircle } from 'lucide-react';
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-interface Character {
-  character: string;
-  want: string;
-  externalProblem: string;
-  internalProblem: string;
-  philosophicalProblem: string;
-  empathyStatement: string;
-  authorityStatement: string;
-  plan: string;
-  callToActions: string;
-  avoidFailure: string;
-  successLooksLike: string;
-  oneLiner: string;
-  elevatorPitch: string;
-  landingPage: string;
-}
+import { AcceleratorFormState } from '@/types/accelerator';
 
 interface StoryBrandTabsContentProps {
-  activeCharacter: number;
-  formState: { story_branding: { characters: Character[] } };
-  handleAddCharacter: () => void;
-  handleCharacterChange: (index: number, field: string, value: string) => void;
-  setActiveCharacter: (index: number) => void;
+  formState: AcceleratorFormState;
+  setFormState: (state: AcceleratorFormState) => void;
 }
 
 const StoryBrandTabsContent: React.FC<StoryBrandTabsContentProps> = ({
-  activeCharacter,
   formState,
-  handleAddCharacter,
-  handleCharacterChange,
-  setActiveCharacter,
+  setFormState
 }) => {
+  const [activeCharacter, setActiveCharacter] = useState(0);
+
+  const handleCharacterChange = (index: number, field: string, value: any) => {
+    const newCharacters = [...formState.storyBranding.characters];
+    newCharacters[index] = {
+      ...newCharacters[index],
+      [field]: value,
+    };
+    setFormState({
+      ...formState,
+      storyBranding: {
+        ...formState.storyBranding,
+        characters: newCharacters,
+      },
+    });
+  };
+
+  const handleAddCharacter = () => {
+    setFormState({
+      ...formState,
+      storyBranding: {
+        ...formState.storyBranding,
+        characters: [
+          ...formState.storyBranding.characters,
+          {
+            character: 'New character',
+            want: '',
+            externalProblem: '',
+            internalProblem: '',
+            philosophicalProblem: '',
+            empathyStatement: '',
+            authorityStatement: '',
+            plan: '',
+            callToActions: '',
+            avoidFailure: '',
+            successLooksLike: '',
+            oneLiner: '',
+            elevatorPitch: '',
+            landingPage: '',
+          },
+        ],
+      },
+    });
+    setActiveCharacter(formState.storyBranding.characters.length);
+  };
+
   return (
     <TabsContent value="storybranding">
       <Card>
@@ -54,13 +78,13 @@ const StoryBrandTabsContent: React.FC<StoryBrandTabsContentProps> = ({
         <CardContent>
           <Tabs value={activeCharacter.toString()} onValueChange={(value) => setActiveCharacter(parseInt(value))}>
             <TabsList className="mb-4">
-              {formState.story_branding.characters.map((char, index) => (
+              {formState.storyBranding.characters.map((char, index) => (
                 <TabsTrigger key={index} value={index.toString()}>
                   {char.character || `Character ${index + 1}`}
                 </TabsTrigger>
               ))}
             </TabsList>
-            {formState.story_branding.characters.map((character, charIndex) => (
+            {formState.storyBranding.characters.map((character, charIndex) => (
               <TabsContent key={charIndex} value={charIndex.toString()}>
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

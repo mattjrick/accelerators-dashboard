@@ -41,13 +41,13 @@ CREATE TABLE accelerators (
   created_by TEXT NOT NULL,
   last_updated_by TEXT,
   last_updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  linked_service TEXT,
-  linked_accelerators JSON,
+  linked_service TEXT NOT NULL,
+  linked_accelerators TEXT[] NOT NULL,
   status statusEnum NOT NULL,
   effort INTEGER NOT NULL,
   times_used INTEGER NOT NULL,
-  story_branding JSON,
-  links JSON
+  story_branding JSON NOT NULL,
+  links JSON NOT NULL
 );
 ```
 

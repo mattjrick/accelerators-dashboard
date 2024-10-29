@@ -11,14 +11,13 @@ export async function deleteAccelerator(formData: FormData) {
 
 // Get accelerator by id
 export async function getAccelerator(id: number) {
-  console.log('getAccelerator', id);
   let accelerator = await getAcceleratorById(id);
-  console.log('accelerator', accelerator);
   return accelerator;
 }
 
 // Add accelerator and add createdBy and createdDate
 export async function addAcceleratorFromForm(data: any) {
+  console.log("Data in actions:" + JSON.stringify(data, null, 2));
   const extendedData = {
     ...data,
     createdBy: 'user',

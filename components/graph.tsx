@@ -20,7 +20,7 @@ type Link = {
   target: string;
 };
 
-type HomepageComponentProps = {
+type GraphComponentProps = {
   accelerators: Promise<{ id: number; name: string; linkedService: string; linkedAccelerators: string[] }[]>;
 };
 
@@ -67,7 +67,7 @@ export function GraphComponent({ accelerators }: GraphComponentProps) {
             // Draw the node as a circle
             const radius = 5;
             ctx.beginPath();
-            ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false);
+            ctx.arc(node.x ?? 0, node.y ?? 0, radius, 0, 2 * Math.PI, false);
             ctx.fillStyle = node.color;
             ctx.fill();
 
@@ -79,7 +79,7 @@ export function GraphComponent({ accelerators }: GraphComponentProps) {
               ctx.fillStyle = 'black';
               ctx.textAlign = 'center';
               ctx.textBaseline = 'middle';
-              ctx.fillText(label, node.x, node.y + radius + fontSize);
+              ctx.fillText(label, node.x ?? 0, (node.y ?? 0) + radius + fontSize);
             }
           }}
         />

@@ -13,13 +13,14 @@ import {
 } from "@/components/ui/dialog";
 
 interface AcceleratorDialogButtonProps {
-  acceleratorNames: string[];
+  acceleratorNames: { name: string }[];
 }
 
 const AcceleratorDialogButton: React.FC<AcceleratorDialogButtonProps> = ({ acceleratorNames }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const openDialog = () => setIsDialogOpen(true);
+  const closeDialog = () => setIsDialogOpen(false);
 
   return (
     <>
@@ -35,7 +36,7 @@ const AcceleratorDialogButton: React.FC<AcceleratorDialogButtonProps> = ({ accel
           <DialogTitle>Create an Accelerator</DialogTitle>
           <DialogDescription>Create your accelerator</DialogDescription>
         </DialogHeader>
-        <AcceleratorDialog acceleratorNames={acceleratorNames} />
+        <AcceleratorDialog acceleratorNames={acceleratorNames} onClose={closeDialog} />
       </DialogContent>
     </Dialog>
   </>

@@ -10,20 +10,21 @@ import { MultiSelect } from "@/components/ui/multi-select";
 interface OverviewTabsContentProps {
   formState: {
     name: string;
-    linked_service: string;
+    linkedService: string;
     description: string;
     effort: number;
-    times_used: number;
+    timesUsed: number;
     status: string;
-    linked_accelerators: string[];
+    linkedAccelerators: string[];
   };
-  handleInputChange: (field: string, value: any) => void;
+  handleInputChange: (field: keyof OverviewTabsContentProps['formState'], value: any) => void;
   acceleratorNames?: { name: string }[];
 }
 
 const OverviewTabsContent: React.FC<OverviewTabsContentProps> = ({ formState, handleInputChange, acceleratorNames = [] }) => {
+  
   const handleLinkedAcceleratorsChange = (selectedAccelerators: string[]) => {
-    handleInputChange('linked_accelerators', selectedAccelerators);
+    handleInputChange('linkedAccelerators', selectedAccelerators);
   };
 
   const available_services = [
@@ -53,12 +54,12 @@ const OverviewTabsContent: React.FC<OverviewTabsContentProps> = ({ formState, ha
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="linked_service">Linked Service</Label>
+              <Label htmlFor="linkedService">Linked Service</Label>
               <Select
-                onValueChange={(value) => handleInputChange('linked_service', value)}
-                defaultValue={formState.linked_service}
+                onValueChange={(value) => handleInputChange('linkedService', value)}
+                defaultValue={formState.linkedService}
               >
-                <SelectTrigger id="linked_service">
+                <SelectTrigger id="linkedService">
                   <SelectValue placeholder="Select a service" />
                 </SelectTrigger>
                 <SelectContent>
@@ -91,12 +92,12 @@ const OverviewTabsContent: React.FC<OverviewTabsContentProps> = ({ formState, ha
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="times_used">Times Used</Label>
+              <Label htmlFor="timesUsed">Times Used</Label>
               <Input
-                id="times_used"
+                id="timesUsed"
                 type="number"
-                value={formState.times_used}
-                onChange={(e) => handleInputChange('times_used', parseInt(e.target.value))}
+                value={formState.timesUsed}
+                onChange={(e) => handleInputChange('timesUsed', parseInt(e.target.value))}
               />
             </div>
             <div className="space-y-2">
@@ -117,11 +118,11 @@ const OverviewTabsContent: React.FC<OverviewTabsContentProps> = ({ formState, ha
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="linked_accelerators">Linked Accelerators</Label>
+            <Label htmlFor="linkedAccelerators">Linked Accelerators</Label>
             <MultiSelect
               options={acceleratorNames.map(a => ({ label: a.name, value: a.name }))}
               onValueChange={handleLinkedAcceleratorsChange}
-              defaultValue={formState.linked_accelerators}
+              defaultValue={formState.linkedAccelerators}
               placeholder="Select linked accelerators"
               className="w-full"
             />

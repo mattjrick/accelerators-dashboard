@@ -30,7 +30,7 @@ export function AcceleratorsTable({
   accelerators: SelectAccelerator[];
   offset: number;
   totalAccelerators: number;
-  acceleratorNames?: { name: string }[];
+  acceleratorNames: { name: string }[];
 }) {
   let router = useRouter();
   let acceleratorsPerPage = 5;

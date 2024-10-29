@@ -29,12 +29,12 @@ export const accelerators = pgTable('accelerators', {
   lastUpdatedBy: text('last_updated_by'),
   lastUpdatedDate: timestamp('last_updated_date'),
   linkedService: text('linked_service').notNull(),
-  linkedAccelerators: json('linked_accelerators'),
+  linkedAccelerators: text('linked_accelerators').array().notNull(),
   status: statusEnum('status').notNull(),
   effort: integer('effort').notNull(),
   timesUsed: integer('times_used').notNull(),
-  storyBranding: json('story_branding'),
-  links: json('links')
+  storyBranding: json('story_branding').notNull(),
+  links: json('links').notNull()
 });
 
 export type SelectAccelerator = typeof accelerators.$inferSelect;
@@ -58,8 +58,14 @@ export type SelectAccelerator = typeof accelerators.$inferSelect;
 type NewAccelerator = typeof accelerators.$inferInsert;
 
 export async function addAccelerator(accelerator: NewAccelerator) {
-  let newAccelerator = await db.insert(accelerators).values(accelerator);
-  return newAccelerator;
+  try {
+    console.log("accelerator data in db: " + JSON.stringify(accelerator, null, 2));
+    let newAccelerator = await db.insert(accelerators).values(accelerator);
+    return newAccelerator;
+  } catch (error) {
+    console.error("Error inserting accelerator:", error);
+    throw error; // Re-throw the error after logging it
+  }
 }
 
 export async function acceleratorGraphView() {
@@ -93,7 +99,7 @@ export async function searchAccelerators(
   offset: number
 ): Promise<{
   accelerators: SelectAccelerator[];
-  acceleratorNames?: { name: string }[];
+  acceleratorNames: { name: string }[];
   newOffset: number;
   totalAccelerators: number;
 }> {
