@@ -64,8 +64,8 @@ export function Accelerator({ accelerators, acceleratorNames }: AcceleratorProps
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>
-              <span onClick={handleEditClick}>Edit</span>
+            <DropdownMenuItem onClick={handleEditClick}>
+              <span>Edit</span>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <form action={deleteAccelerator}>

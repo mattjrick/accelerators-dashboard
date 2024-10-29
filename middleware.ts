@@ -7,11 +7,13 @@ export async function middleware(req: NextRequest) {
   const token = await getToken({ 
     req, 
     secret: process.env.AUTH_SECRET, 
-    secureCookie: true 
+    secureCookie: process.env.SECURE_COOKIE_ENABLED === 'true'
   });
   const { pathname } = req.nextUrl;
 
-  console.log("Activated middleware" + JSON.stringify(token, null, 2));
+  if (token) {
+    console.log("Activated middleware for user: " + JSON.stringify(token.name, null, 2));
+  }
 
   // Allow the request if the following is true
   // 1. It's a request for next-auth session & provider fetching
@@ -29,7 +31,6 @@ export async function middleware(req: NextRequest) {
   if (!token && pathname !== '/login') {
     console.log("redirected:" + JSON.stringify(token,null, 2));
     const url = req.nextUrl.clone();
-    url.pathname = '/login';
     return NextResponse.redirect(url);
   }
 }
