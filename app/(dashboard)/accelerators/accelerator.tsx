@@ -22,6 +22,7 @@ import { TableCell, TableRow } from '@/components/ui/table';
 import { SelectAccelerator } from '@/lib/db';
 import { deleteAccelerator } from './actions';
 import { AcceleratorDialog } from './accelerator-form';
+import { AcceleratorViewComponent } from './accelerator-view';
 
 interface AcceleratorProps {
   accelerators: SelectAccelerator;
@@ -29,16 +30,27 @@ interface AcceleratorProps {
 }
 export function Accelerator({ accelerators, acceleratorNames }: AcceleratorProps) {
   
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+
+  const handleViewClick = () => {
+    console.log('view click');
+    setIsViewDialogOpen(true);
+  };
 
   const handleEditClick = () => {
     console.log('edit click');
-    setIsDialogOpen(true);
+    setIsEditDialogOpen(true);
   };
 
-  const handleCloseDialog = () => {
-    console.log('close dialog');
-    setIsDialogOpen(false);
+  const handleViewCloseDialog = () => {
+    console.log('close view dialog');
+    setIsViewDialogOpen(false);
+  };
+
+  const handleEditCloseDialog = () => {
+    console.log('close edit dialog');
+    setIsEditDialogOpen(false);
   };
 
   return (
@@ -64,6 +76,9 @@ export function Accelerator({ accelerators, acceleratorNames }: AcceleratorProps
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem onClick={handleViewClick}>
+              <span>View</span>
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={handleEditClick}>
               <span>Edit</span>
             </DropdownMenuItem>
@@ -76,7 +91,7 @@ export function Accelerator({ accelerators, acceleratorNames }: AcceleratorProps
         </DropdownMenu>
       </TableCell>
 
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Accelerator</DialogTitle>
@@ -85,10 +100,19 @@ export function Accelerator({ accelerators, acceleratorNames }: AcceleratorProps
           <AcceleratorDialog
             selectedItemId={accelerators.id}
             isEditMode={true}
-            onClose={handleCloseDialog}
+            onClose={handleEditCloseDialog}
             acceleratorNames={acceleratorNames}
           />
         </DialogContent>
+      </Dialog>
+      
+      
+      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+      <AcceleratorViewComponent
+        selectedItemId={accelerators.id}
+        isOpen={isViewDialogOpen}
+        onClose={() => setIsViewDialogOpen(false)}
+      />
       </Dialog>
     </TableRow>
   );
