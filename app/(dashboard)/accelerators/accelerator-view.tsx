@@ -15,20 +15,12 @@ import { getAccelerator } from './actions'
 import { Spinner } from '@/components/icons'
 import { Character } from '@/types/storybrand'
 import { ScrollArea } from "@/components/ui/scroll-area"
+import LandingPagePreview from '@/components/ui/landing-page-preview'
 
 interface AcceleratorViewProps {
   selectedItemId: number;
   isOpen: boolean;
   onClose: () => void;
-}
-
-const LandingPagePreview = ({ content }: { content: string }) => {
-  return (
-    <div 
-      className="border rounded-lg p-4 mt-4 bg-white shadow-sm"
-      dangerouslySetInnerHTML={{ __html: content }}
-    />
-  )
 }
 
 export function AcceleratorViewComponent({ selectedItemId, isOpen, onClose }: AcceleratorViewProps) {

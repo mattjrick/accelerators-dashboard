@@ -43,11 +43,6 @@ export function Accelerator({ accelerators, acceleratorNames }: AcceleratorProps
     setIsEditDialogOpen(true);
   };
 
-  const handleViewCloseDialog = () => {
-    console.log('close view dialog');
-    setIsViewDialogOpen(false);
-  };
-
   const handleEditCloseDialog = () => {
     console.log('close edit dialog');
     setIsEditDialogOpen(false);
