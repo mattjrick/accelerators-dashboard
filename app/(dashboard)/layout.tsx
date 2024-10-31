@@ -20,7 +20,7 @@ import {
 import { Analytics } from '@vercel/analytics/react';
 import { User } from './user';
 import { KainosLogo } from '@/components/icons';
-import Providers from './providers';
+import Providers from '../../components/ui/providers';
 import { NavItem } from '../../components/ui/nav-item';
 import { SearchInput } from '../../components/ui/search';
 

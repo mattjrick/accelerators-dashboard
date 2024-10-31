@@ -5,9 +5,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import OverviewTabsContent from '@/components/acceleratorform/overviewtabscontent';
-import StoryBrandTabsContent from "@/components/acceleratorform/storybrandtabscontent";
-import LinksTabsContent from "@/components/acceleratorform/linkstabcontent";
+import OverviewTabsContent from '@/components/ui/overviewtabscontent';
+import StoryBrandTabsContent from "@/components/ui/storybrandtabscontent";
+import LinksTabsContent from "@/components/ui/linkstabcontent";
 import { addAcceleratorFromForm, updateAcceleratorFromForm, getAccelerator } from './actions';
 import { Spinner } from '@/components/icons';
 import { AcceleratorFormState } from '@/types/accelerator';

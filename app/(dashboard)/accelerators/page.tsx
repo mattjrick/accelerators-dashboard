@@ -5,8 +5,7 @@ import {
   TabsTrigger,
 } from '@/components/ui/tabs';
 import { 
-  File,
-  PlusCircle 
+  File
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AcceleratorsTable } from './accelerator-table';
