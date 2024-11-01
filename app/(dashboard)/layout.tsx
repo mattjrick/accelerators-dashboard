@@ -9,20 +9,20 @@ import {
 } from 'lucide-react';
 
 
-import DashboardBreadcrumb from '@/components/breadcrumb';
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import DashboardBreadcrumb from '@/components/ui/dashboard-breadcrumb';
+import { Button } from '@/components/ui/common/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/common/sheet';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger
-} from '@/components/ui/tooltip';
+} from '@/components/ui/common/tooltip';
 import { Analytics } from '@vercel/analytics/react';
 import { User } from './user';
 import { KainosLogo } from '@/components/icons';
-import Providers from '../../components/ui/providers';
-import { NavItem } from '../../components/ui/nav-item';
-import { SearchInput } from '../../components/ui/search';
+import Providers from '../../components/ui/common/providers';
+import { NavItem } from '../../components/ui/common/nav-item';
+import { SearchInput } from '../../components/ui/common/search';
 
 export default function DashboardLayout({
   children
@@ -66,7 +66,7 @@ function DesktopNav() {
           <Home className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="/accelerators" label="Accelerators">
+        <NavItem href="/catalogue" label="Catalogue">
           <Package className="h-5 w-5" />
         </NavItem>
 
@@ -108,7 +108,7 @@ function MobileNav() {
             className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
           >
             <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
-            <span className="sr-only">Vercel</span>
+            <span className="sr-only">Kainos</span>
           </Link>
           <Link
             href="#"
@@ -122,10 +122,10 @@ function MobileNav() {
             className="flex items-center gap-4 px-2.5 text-foreground"
           >
             <Package className="h-5 w-5" />
-            Accelerators
+            Catalogue
           </Link>
           <Link
-            href="/accelerators"
+            href="/catalogue"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
             <LineChart className="h-5 w-5" />

@@ -1,32 +1,36 @@
 import { useState, useEffect } from 'react';
 import {
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from "@/components/ui/common/dialog";
+import { Button } from "@/components/ui/common/button";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/common/tabs";
+import { ScrollArea } from "@/components/ui/common/scroll-area";
 import OverviewTabsContent from '@/components/ui/overviewtabscontent';
 import StoryBrandTabsContent from "@/components/ui/storybrandtabscontent";
 import LinksTabsContent from "@/components/ui/linkstabcontent";
-import { addAcceleratorFromForm, updateAcceleratorFromForm, getAccelerator } from './actions';
+import { addItemFromForm, updateItemFromForm, getItem } from '../../../lib/actions';
 import { Spinner } from '@/components/icons';
-import { AcceleratorFormState } from '@/types/accelerator';
+import { ItemFormState } from '@/types/item';
 import { Character } from '@/types/storybrand';
 
-interface AcceleratorDialogProps {
+interface ItemDialogProps {
   onClose: () => void;
   isEditMode?: boolean;
   selectedItemId?: number | null;
-  acceleratorNames: { name: string }[];
+  itemNames: { name: string; type?: string }[];
+  initialType?: 'service' | 'accelerator';
 }
 
-export function AcceleratorDialog({
+export function ItemDialog({
   onClose,
   isEditMode = false,
   selectedItemId = null,
-  acceleratorNames,
-}: AcceleratorDialogProps) {
-  const [formState, setFormState] = useState<AcceleratorFormState>({
+  itemNames,
+  initialType = 'accelerator',
+}: ItemDialogProps) {
+  const [itemNamesWithTypes, setItemNamesWithTypes] = useState(itemNames.map(item => ({ ...item, type: item.type ?? '' })));
+  const [formState, setFormState] = useState<ItemFormState>({
+    type: initialType,
     name: '',
     description: '',
     linkedService: '',
@@ -57,26 +61,30 @@ export function AcceleratorDialog({
     links: {},
   });
 
-  const [loading, setLoading] = useState(isEditMode); // Initialize loading state
+  const [loading, setLoading] = useState(isEditMode);
 
   useEffect(() => {
     if (isEditMode && selectedItemId) {
       const fetchData = async () => {
         try {
-          const data = await getAccelerator(selectedItemId);
-          const formattedData: AcceleratorFormState = {
+          const data = await getItem(selectedItemId);
+          const formattedData: ItemFormState = {
             ...data,
+            linkedService: data.linkedService ?? '',
+            linkedAccelerators: data.linkedAccelerators ?? [],
+            effort: data.effort ?? 0,
+            timesUsed: data.timesUsed ?? 0,
             storyBranding: data.storyBranding as { characters: Character[] },
             links: data.links as Record<string, string>,
           };
-          setFormState((prevState: AcceleratorFormState) => ({
+          setFormState((prevState: ItemFormState) => ({
             ...prevState,
             ...formattedData,
           }));
         } catch (error) {
-          console.error('Failed to fetch accelerator data');
+          console.error('Failed to fetch item data');
         } finally {
-          setLoading(false); // Set loading to false after data is fetched
+          setLoading(false);
         }
       };
   
@@ -90,7 +98,6 @@ export function AcceleratorDialog({
       [field]: value,
     });
   };
-
 
   const handleLinkChange = (key: string, value: any) => {
     setFormState((prevState) => ({
@@ -122,16 +129,15 @@ export function AcceleratorDialog({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const formData = {
       ...formState,
     };
     console.log(formData);
     try {
       if (isEditMode) {
-        await updateAcceleratorFromForm(formData);
+        await updateItemFromForm(formData);
       } else {
-        await addAcceleratorFromForm(formData);
+        await addItemFromForm(formData);
       }
       onClose();
     } catch (error) {
@@ -141,14 +147,13 @@ export function AcceleratorDialog({
 
   if (loading) {
     return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <Spinner />
-    </div>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <Spinner />
+      </div>
     );
   }
 
   return (
-    console.log(acceleratorNames),
     <form onSubmit={handleSubmit} className="flex flex-col h-[90%]">
       <Tabs defaultValue="overview" className="flex flex-col h-[90%]">
         <TabsList className="w-full grid grid-cols-3">
@@ -156,30 +161,28 @@ export function AcceleratorDialog({
           <TabsTrigger value="storybranding">Storybranding</TabsTrigger>
           <TabsTrigger value="links">Links</TabsTrigger>
         </TabsList>
-          <ScrollArea className="h-full">
-            <div className="p-6 space-y-6">
+        <ScrollArea className="h-full">
+          <div className="p-6 space-y-6">
+            <OverviewTabsContent
+              formState={formState}
+              handleInputChange={handleInputChange}
+              itemNames={itemNamesWithTypes}
+            />
+            
+            <StoryBrandTabsContent
+              formState={formState}
+              setFormState={setFormState}
+            />
 
-              <OverviewTabsContent
-                formState={formState}
-                handleInputChange={handleInputChange}
-                acceleratorNames={acceleratorNames}
-              />
-
-              
-              <StoryBrandTabsContent
-                formState={formState}
-                setFormState={setFormState}
-              />
-
-              <LinksTabsContent
-                formState={formState}
-                setFormState={setFormState}
-                handleLinkChange={handleLinkChange}
-                handleRemoveLink={handleRemoveLink}
-                handleAddLink={handleAddLink}
-              />
-            </div>
-          </ScrollArea>
+            <LinksTabsContent
+              formState={formState}
+              setFormState={setFormState}
+              handleLinkChange={handleLinkChange}
+              handleRemoveLink={handleRemoveLink}
+              handleAddLink={handleAddLink}
+            />
+          </div>
+        </ScrollArea>
       </Tabs>
       <DialogFooter className="mt-4">
         <Button type="submit">{isEditMode ? 'Update' : 'Create'}</Button>

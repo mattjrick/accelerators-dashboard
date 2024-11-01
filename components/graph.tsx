@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/common/card';
+import { Spinner } from './icons';
 
 // Dynamically import ForceGraph2D to disable SSR
 const ForceGraph2D = dynamic(() => import('react-force-graph').then(mod => mod.ForceGraph2D), { ssr: false });
@@ -21,39 +22,45 @@ type Link = {
 };
 
 type GraphComponentProps = {
-  accelerators: Promise<{ id: number; name: string; linkedService: string; linkedAccelerators: string[] }[]>;
+  acceleratorItems: { id: number; name: string; linkedService: string | null; linkedAccelerators: string[] | null }[];
 };
 
-export function GraphComponent({ accelerators }: GraphComponentProps) {
+export function GraphComponent({ acceleratorItems }: GraphComponentProps) {
   const [graphData, setGraphData] = useState<{ nodes: Node[], links: Link[] }>({ nodes: [], links: [] });
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    accelerators.then(data => {
-      const nodes: Node[] = [];
-      const links: Link[] = [];
+    const nodes: Node[] = [];
+    const links: Link[] = [];
 
-      data.forEach(accelerator => {
-        // Add the accelerator as a node
-        nodes.push({ id: `name-${accelerator.id}`, name: accelerator.name, group: 'name' });
+    // Add accelerator items as nodes and create links
+    acceleratorItems.forEach(accelerator => {
+      nodes.push({ id: `accelerator-${accelerator.id}`, name: accelerator.name, group: 'name' });
 
-        // Add the linked service as a node and create a link
+      // Link accelerator to its linked service
+      if (accelerator.linkedService) {
         if (!nodes.find(node => node.id === `linkedService-${accelerator.linkedService}`)) {
           nodes.push({ id: `linkedService-${accelerator.linkedService}`, name: accelerator.linkedService, group: 'linkedService' });
         }
-        links.push({ source: `linkedService-${accelerator.linkedService}`, target: `name-${accelerator.id}` });
+        links.push({ source: `linkedService-${accelerator.linkedService}`, target: `accelerator-${accelerator.id}` });
+      }
 
-        // Add linked accelerators as nodes and create links
-        accelerator.linkedAccelerators.forEach(linkedAccelerator => {
-          if (!nodes.find(node => node.id === `name-${linkedAccelerator}`)) {
-            nodes.push({ id: `name-${linkedAccelerator}`, name: linkedAccelerator, group: 'name' });
-          }
-          links.push({ source: `name-${accelerator.id}`, target: `name-${linkedAccelerator}` });
-        });
+      // Link accelerator to its linked accelerators
+      accelerator.linkedAccelerators?.forEach(linkedAccelerator => {
+        if (!nodes.find(node => node.id === `accelerator-${linkedAccelerator}`)) {
+          nodes.push({ id: `accelerator-${linkedAccelerator}`, name: linkedAccelerator, group: 'name' });
+        }
+        links.push({ source: `accelerator-${accelerator.id}`, target: `accelerator-${linkedAccelerator}` });
       });
-
-      setGraphData({ nodes, links });
     });
-  }, [accelerators]);
+
+    setGraphData({ nodes, links });
+    setLoading(false); // Set loading to false once data is processed
+  }, [acceleratorItems]);
+
+  if (loading) {
+    return < Spinner />; // Render loading indicator while data is being fetched
+  }
 
   return (
     <Card>

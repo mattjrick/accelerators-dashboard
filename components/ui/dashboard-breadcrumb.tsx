@@ -9,7 +9,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator
-} from '@/components/ui/breadcrumb';
+} from '@/components/ui/common/breadcrumb';
 
 // Utility function to capitalize the first letter of a string
 function capitalizeFirstLetter(string: string) {

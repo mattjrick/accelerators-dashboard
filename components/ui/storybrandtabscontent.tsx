@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/common/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/common/card";
+import { Button } from "@/components/ui/common/button";
 import { PlusCircle } from 'lucide-react';
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { AcceleratorFormState } from '@/types/accelerator';
+import { Textarea } from "@/components/ui/common/textarea";
+import { Input } from "@/components/ui/common/input";
+import { Label } from "@/components/ui/common/label";
+import { ItemFormState } from '@/types/item';
 
 interface StoryBrandTabsContentProps {
-  formState: AcceleratorFormState;
-  setFormState: (state: AcceleratorFormState) => void;
+  formState: ItemFormState;
+  setFormState: (state: ItemFormState) => void;
 }
 
 const StoryBrandTabsContent: React.FC<StoryBrandTabsContentProps> = ({

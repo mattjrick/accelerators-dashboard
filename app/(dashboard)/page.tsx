@@ -1,14 +1,12 @@
-import { acceleratorGraphView } from '@/lib/db';
-import { GraphComponent } from "@/components/graph"
+import { itemGraphView } from '@/lib/search';
+import { GraphComponent } from "@/components/graph";
 
-// Get accelerators from the database
-async function fetchAccelerators() {
-	return await acceleratorGraphView() || []
-}
+export default async function Page() {
+  const itemData = await itemGraphView();
 
-export default function Page() {
-  let acceleratorData = fetchAccelerators()
   return (
-    <GraphComponent accelerators={acceleratorData}/>
-  )
+    <GraphComponent 
+      acceleratorItems={itemData.acceleratorItems} 
+    />
+  );
 }

@@ -32,23 +32,26 @@ Inside the Vercel Postgres dashboard, create a table based on the schema defined
 
 ```
 CREATE TYPE statusEnum AS ENUM ('active', 'draft', 'archived');
+CREATE TYPE typeEnum AS ENUM ('accelerator', 'service');
 
-CREATE TABLE accelerators (
+CREATE TABLE items (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
+  type typeEnum NOT NULL,
   description TEXT NOT NULL,
   created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   created_by TEXT NOT NULL,
   last_updated_by TEXT,
   last_updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  linked_service TEXT NOT NULL,
-  linked_accelerators TEXT[] NOT NULL,
+  linked_service TEXT,
+  linked_accelerators TEXT[],
   status statusEnum NOT NULL,
-  effort INTEGER NOT NULL,
-  times_used INTEGER NOT NULL,
+  effort INTEGER,
+  times_used INTEGER,
   story_branding JSON NOT NULL,
   links JSON NOT NULL
 );
+
 ```
 
 Then, uncomment `app/api/seed.ts` and hit `http://localhost:3000/api/seed` to seed the database with products.

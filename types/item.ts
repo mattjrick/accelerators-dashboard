@@ -1,8 +1,9 @@
 
 import { Character } from '@/types/storybrand';
 
-export interface AcceleratorFormState {
+export interface ItemFormState {
     name: string;
+    type: 'service' | 'accelerator';
     description: string;
     linkedService: string;
     linkedAccelerators: string[]; // Use a consistent type here

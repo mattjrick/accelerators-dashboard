@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableBody,
   Table
-} from '@/components/ui/table';
+} from '@/components/ui/common/table';
 import {
   Card,
   CardContent,
@@ -14,41 +14,43 @@ import {
   CardFooter,
   CardHeader,
   CardTitle
-} from '@/components/ui/card';
-import { Accelerator } from './accelerator';
-import { SelectAccelerator } from '@/lib/db';
+} from '@/components/ui/common/card';
+import { Item } from './item';
+import { SelectItem } from '@/lib/items-db';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/common/button';
 
-export function AcceleratorsTable({
-  accelerators,
+export function ItemsTable({
+  items,
+  type,
   offset,
-  totalAccelerators,
-  acceleratorNames
+  totalItems,
+  itemNames
 }: {
-  accelerators: SelectAccelerator[];
+  items: SelectItem[];
+  type: string | undefined;
   offset: number;
-  totalAccelerators: number;
-  acceleratorNames: { name: string }[];
+  totalItems: number;
+  itemNames: { name: string }[];
 }) {
   let router = useRouter();
-  let acceleratorsPerPage = 5;
+  let itemsPerPage = 5;
 
   function prevPage() {
-    router.push(`/accelerators?offset=${offset - acceleratorsPerPage}`, { scroll: false });
+    router.push(`/catalogue?offset=${offset - itemsPerPage}&type=${type}`, { scroll: false });
   }
 
   function nextPage() {
-    router.push(`/accelerators?offset=${offset + acceleratorsPerPage}`, { scroll: false });
+    router.push(`/catalogue?offset=${offset + itemsPerPage}&type=${type}`, { scroll: false });
   }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Accelerators</CardTitle>
+        <CardTitle>Items</CardTitle>
         <CardDescription>
-          Manage and create accelerators.
+          Manage and create items.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -56,20 +58,19 @@ export function AcceleratorsTable({
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="hidden md:table-cell">Hours Required</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead className="hidden md:table-cell">Status</TableHead>
               <TableHead className="hidden md:table-cell">
-                Total Times Used
+                Description
               </TableHead>
-              <TableHead className="hidden md:table-cell">Created at</TableHead>
               <TableHead>
                 <span className="sr-only">Actions</span>
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {accelerators.map((accelerators) => (
-              <Accelerator key={accelerators.id} accelerators={accelerators} acceleratorNames={acceleratorNames} />
+            {items.map((items) => (
+              <Item key={items.id} items={items} itemNames={itemNames} />
             ))}
           </TableBody>
         </Table>
@@ -79,9 +80,9 @@ export function AcceleratorsTable({
           <div className="text-xs text-muted-foreground">
             Showing{' '}
             <strong>
-              {totalAccelerators === 0 ? 0 : offset + 1}-{Math.min(offset + acceleratorsPerPage, totalAccelerators)}
+              {totalItems === 0 ? 0 : offset + 1}-{Math.min(offset + itemsPerPage, totalItems)}
             </strong>{' '}
-            of <strong>{totalAccelerators}</strong> accelerators
+            of <strong>{totalItems}</strong> items
           </div>
           <div className="flex">
             <Button
@@ -89,7 +90,7 @@ export function AcceleratorsTable({
               variant="ghost"
               size="sm"
               type="submit"
-              disabled={offset < acceleratorsPerPage}
+              disabled={offset < itemsPerPage}
             >
               <ChevronLeft className="mr-2 h-4 w-4" />
               Prev
@@ -99,7 +100,7 @@ export function AcceleratorsTable({
               variant="ghost"
               size="sm"
               type="submit"
-              disabled={offset + acceleratorsPerPage >= totalAccelerators}
+              disabled={offset + itemsPerPage >= totalItems}
             >
               Next
               <ChevronRight className="ml-2 h-4 w-4" />

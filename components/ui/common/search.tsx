@@ -2,7 +2,7 @@
 
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { Input } from '@/components/ui/input';
+import { Input } from '@/components/ui/common/input';
 import { Spinner } from '@/components/icons';
 import { Search } from 'lucide-react';
 
@@ -14,7 +14,7 @@ export function SearchInput() {
     let value = formData.get('q') as string;
     let params = new URLSearchParams({ q: value });
     startTransition(() => {
-      router.replace(`/accelerators?${params.toString()}`);
+      router.replace(`/catalogue?${params.toString()}`);
     });
   }
 

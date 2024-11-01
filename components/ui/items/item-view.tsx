@@ -7,24 +7,24 @@ import {
   DialogHeader, 
   DialogTitle,
   DialogDescription
-} from "@/components/ui/dialog"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { AcceleratorFormState } from '@/types/accelerator'
-import { getAccelerator } from './actions'
+} from "@/components/ui/common/dialog"
+import { Badge } from "@/components/ui/common/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/common/tabs"
+import { ItemFormState } from '@/types/item'
+import { getItem } from '../../../lib/actions'
 import { Spinner } from '@/components/icons'
 import { Character } from '@/types/storybrand'
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { ScrollArea } from "@/components/ui/common/scroll-area"
 import LandingPagePreview from '@/components/ui/landing-page-preview'
 
-interface AcceleratorViewProps {
+interface ItemViewProps {
   selectedItemId: number;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export function AcceleratorViewComponent({ selectedItemId, isOpen, onClose }: AcceleratorViewProps) {
-  const [accelerator, setAccelerator] = useState<AcceleratorFormState | null>(null)
+export function ItemViewComponent({ selectedItemId, isOpen, onClose }: ItemViewProps) {
+  const [item, setItem] = useState<ItemFormState | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -32,14 +32,18 @@ export function AcceleratorViewComponent({ selectedItemId, isOpen, onClose }: Ac
       if (isOpen) {
         setLoading(true)
         try {
-          const data = await getAccelerator(selectedItemId)
-          setAccelerator({
+          const data = await getItem(selectedItemId)
+          setItem({
             ...data,
+            linkedService: data.linkedService as string,
+            linkedAccelerators: data.linkedAccelerators as string[],
+            effort: data.effort as number,
+            timesUsed: data.timesUsed as number,
             storyBranding: data.storyBranding as { characters: Character[] },
             links: data.links as Record<string, string>,
           })
         } catch (error) {
-          console.error('Failed to fetch accelerator data', error)
+          console.error('Failed to fetch item data', error)
         } finally {
           setLoading(false)
         }
@@ -56,18 +60,21 @@ export function AcceleratorViewComponent({ selectedItemId, isOpen, onClose }: Ac
           <div className="flex justify-center items-center h-64">
             <Spinner />
           </div>
-        ) : accelerator ? (
+        ) : item ? (
           <div className="flex flex-col h-full">
             <DialogHeader className="px-6 py-4 border-b">
               <div className="flex justify-between items-start mb-2">
                 <DialogTitle className="text-2xl font-bold pr-8">
-                  {accelerator.name}
+                  {item.name}
                 </DialogTitle>
-                <Badge variant={accelerator.status === 'active' ? 'default' : 'secondary'} className="mr-6">
-                  {accelerator.status}
-                </Badge>
+                <div className="flex gap-2">
+                  <Badge variant={item.status === 'active' ? 'default' : 'secondary'}>
+                    {item.status}
+                  </Badge>
+                  <Badge variant="outline">{item.type}</Badge>
+                </div>
               </div>
-              <DialogDescription>{accelerator.description}</DialogDescription>
+              <DialogDescription>{item.description}</DialogDescription>
             </DialogHeader>
             <ScrollArea className="flex-grow px-6 py-4">
               <Tabs defaultValue="overview" className="w-full">
@@ -79,38 +86,44 @@ export function AcceleratorViewComponent({ selectedItemId, isOpen, onClose }: Ac
                 <TabsContent value="overview">
                   <div className="space-y-6">
                     <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <h3 className="font-semibold mb-2">Linked Service</h3>
-                        <p>{accelerator.linkedService}</p>
-                      </div>
-                      <div>
-                        <h3 className="font-semibold mb-2">Effort</h3>
-                        <p>{accelerator.effort} hours</p>
-                      </div>
-                      <div>
-                        <h3 className="font-semibold mb-2">Times Used</h3>
-                        <p>{accelerator.timesUsed}</p>
-                      </div>
+                      {item.type === 'accelerator' && (
+                        <>
+                          <div>
+                            <h3 className="font-semibold mb-2">Linked Service</h3>
+                            <p>{item.linkedService}</p>
+                          </div>
+                          <div>
+                            <h3 className="font-semibold mb-2">Effort</h3>
+                            <p>{item.effort} hours</p>
+                          </div>
+                          <div>
+                            <h3 className="font-semibold mb-2">Times Used</h3>
+                            <p>{item.timesUsed}</p>
+                          </div>
+                        </>
+                      )}
                     </div>
-                    <div>
-                      <h3 className="font-semibold mb-2">Linked Accelerators</h3>
-                      <ul className="list-disc list-inside">
-                        {accelerator.linkedAccelerators.map((acc, index) => (
-                          <li key={index}>{acc}</li>
-                        ))}
-                      </ul>
-                    </div>
+                    {item.type === 'accelerator' && (
+                      <div>
+                        <h3 className="font-semibold mb-2">Linked Accelerators</h3>
+                        <ul className="list-disc list-inside">
+                          {item.linkedAccelerators.map((acc, index) => (
+                            <li key={index}>{acc}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                     <div>
                       <h3 className="font-semibold mb-2">Value Statement</h3>
-                      <Tabs defaultValue={accelerator.storyBranding.characters[0].character}>
+                      <Tabs defaultValue={item.storyBranding.characters[0].character}>
                         <TabsList>
-                          {accelerator.storyBranding.characters.map((character, index) => (
+                          {item.storyBranding.characters.map((character, index) => (
                             <TabsTrigger key={index} value={character.character}>
                               {character.character}
                             </TabsTrigger>
                           ))}
                         </TabsList>
-                        {accelerator.storyBranding.characters.map((character, index) => (
+                        {item.storyBranding.characters.map((character, index) => (
                           <TabsContent key={index} value={character.character}>
                             <LandingPagePreview content={character.landingPage} />
                           </TabsContent>
@@ -120,15 +133,15 @@ export function AcceleratorViewComponent({ selectedItemId, isOpen, onClose }: Ac
                   </div>
                 </TabsContent>
                 <TabsContent value="characters">
-                  <Tabs defaultValue={accelerator.storyBranding.characters[0].character}>
+                  <Tabs defaultValue={item.storyBranding.characters[0].character}>
                     <TabsList className="mb-4">
-                      {accelerator.storyBranding.characters.map((character, index) => (
+                      {item.storyBranding.characters.map((character, index) => (
                         <TabsTrigger key={index} value={character.character}>
                           {character.character}
                         </TabsTrigger>
                       ))}
                     </TabsList>
-                    {accelerator.storyBranding.characters.map((character, index) => (
+                    {item.storyBranding.characters.map((character, index) => (
                       <TabsContent key={index} value={character.character}>
                         <div className="space-y-4">
                           <h3 className="font-semibold text-lg">{character.character}</h3>
@@ -189,7 +202,7 @@ export function AcceleratorViewComponent({ selectedItemId, isOpen, onClose }: Ac
                 </TabsContent>
                 <TabsContent value="resources">
                   <div className="space-y-4">
-                    {Object.entries(accelerator.links).map(([key, value]) => (
+                    {Object.entries(item.links).map(([key, value]) => (
                       <div key={key}>
                         <h3 className="font-semibold capitalize mb-1">{key}</h3>
                         <a href={value} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">

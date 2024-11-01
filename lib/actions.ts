@@ -1,37 +1,37 @@
 'use server';
 
-import { deleteAcceleratorById, getAcceleratorById, addAccelerator, updateAccelerator } from '@/lib/db';
+import { deleteItemById, getItemById, addItem, updateItem } from '@/lib/items-db';
 import { revalidatePath } from 'next/cache';
 
-export async function deleteAccelerator(formData: FormData) {
+export async function deleteItem(formData: FormData) {
   let id = Number(formData.get('id'));
-  await deleteAcceleratorById(id);
+  await deleteItemById(id);
   revalidatePath('/accelerators');
 }
 
 // Get accelerator by id
-export async function getAccelerator(id: number) {
-  let accelerator = await getAcceleratorById(id);
+export async function getItem(id: number) {
+  let accelerator = await getItemById(id);
   return accelerator;
 }
 
 // Add accelerator and add createdBy and createdDate
-export async function addAcceleratorFromForm(data: any) {
+export async function addItemFromForm(data: any) {
   console.log("Data in actions:" + JSON.stringify(data, null, 2));
   const extendedData = {
     ...data,
     createdBy: 'user',
     createdDate: new Date(),
   }
-  await addAccelerator(extendedData);
+  await addItem(extendedData);
 }
 
 // Update accelerator and add updatedBy and updatedDate
-export async function updateAcceleratorFromForm(data: any) {
+export async function updateItemFromForm(data: any) {
   const extendedData = {
     ...data,
     updatedBy: 'user',
     updatedDate: new Date(),
   }
-  await updateAccelerator(extendedData);
+  await updateItem(extendedData);
 }

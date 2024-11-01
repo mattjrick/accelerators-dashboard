@@ -1,8 +1,8 @@
 import React from 'react';
-import { Input } from "@/components/ui/input";
-import { TabsContent} from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/common/input";
+import { TabsContent} from "@/components/ui/common/tabs";
+import { Button } from "@/components/ui/common/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/common/card";
 
 interface LinksTabsContentProps {
   formState: {

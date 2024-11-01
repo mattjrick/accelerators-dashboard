@@ -7,28 +7,29 @@ import {
   DialogTitle,
   DialogHeader,
   DialogDescription
-} from "@/components/ui/dialog";
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+} from "@/components/ui/common/dialog";
+import { Badge } from '@/components/ui/common/badge';
+import { Button } from '@/components/ui/common/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+} from '@/components/ui/common/dropdown-menu';
 import { MoreHorizontal } from 'lucide-react';
-import { TableCell, TableRow } from '@/components/ui/table';
-import { SelectAccelerator } from '@/lib/db';
-import { deleteAccelerator } from './actions';
-import { AcceleratorDialog } from './accelerator-form';
-import { AcceleratorViewComponent } from './accelerator-view';
+import { TableCell, TableRow } from '@/components/ui/common/table';
+import { SelectItem } from '@/lib/items-db';
+import { deleteItem } from '../../../lib/actions';
+import { ItemDialog } from './item-dialog';
+import { ItemViewComponent } from './item-view';
 
-interface AcceleratorProps {
-  accelerators: SelectAccelerator;
-  acceleratorNames: { name: string }[];
+interface ItemProps {
+  items: SelectItem;
+  itemNames: { name: string }[];
 }
-export function Accelerator({ accelerators, acceleratorNames }: AcceleratorProps) {
+
+export function Item({ items, itemNames }: ItemProps) {
   
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
@@ -50,17 +51,18 @@ export function Accelerator({ accelerators, acceleratorNames }: AcceleratorProps
 
   return (
     <TableRow>
-      <TableCell className="font-medium">{accelerators.name}</TableCell>
+      <TableCell className="font-medium">{items.name}</TableCell>
       <TableCell>
         <Badge variant="outline" className="capitalize">
-          {accelerators.status}
+          {items.type}
         </Badge>
       </TableCell>
-      <TableCell className="hidden md:table-cell">{`${accelerators.effort}`}</TableCell>
-      <TableCell className="hidden md:table-cell">{accelerators.timesUsed}</TableCell>
-      <TableCell className="hidden md:table-cell">
-        {accelerators.createdDate.toLocaleDateString("en-US")}
+      <TableCell>
+        <Badge variant="outline" className="capitalize">
+          {items.status}
+        </Badge>
       </TableCell>
+      <TableCell className="hidden md:table-cell">{items.description}</TableCell>
       <TableCell>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -78,7 +80,7 @@ export function Accelerator({ accelerators, acceleratorNames }: AcceleratorProps
               <span>Edit</span>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <form action={deleteAccelerator}>
+              <form action={deleteItem}>
                 <button type="submit">Delete</button>
               </form>
             </DropdownMenuItem>
@@ -89,25 +91,24 @@ export function Accelerator({ accelerators, acceleratorNames }: AcceleratorProps
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Accelerator</DialogTitle>
-            <DialogDescription>Update your accelerator</DialogDescription>
+            <DialogTitle>Edit Item</DialogTitle>
+            <DialogDescription>Update your item</DialogDescription>
           </DialogHeader>
-          <AcceleratorDialog
-            selectedItemId={accelerators.id}
+          <ItemDialog
+            selectedItemId={items.id}
             isEditMode={true}
             onClose={handleEditCloseDialog}
-            acceleratorNames={acceleratorNames}
+            itemNames={itemNames}
           />
         </DialogContent>
       </Dialog>
       
-      
       <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-      <AcceleratorViewComponent
-        selectedItemId={accelerators.id}
-        isOpen={isViewDialogOpen}
-        onClose={() => setIsViewDialogOpen(false)}
-      />
+        <ItemViewComponent
+          selectedItemId={items.id}
+          isOpen={isViewDialogOpen}
+          onClose={() => setIsViewDialogOpen(false)}
+        />
       </Dialog>
     </TableRow>
   );
