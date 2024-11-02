@@ -8,7 +8,7 @@ export async function searchItems(
   type?: 'accelerator' | 'service'
 ): Promise<{
   items: SelectItem[];
-  itemNames: { name: string }[];
+  itemNames: { name: string, type: string }[];
   newOffset: number;
   totalItems: number;
 }> {
@@ -36,7 +36,7 @@ export async function searchItems(
 
   // Return all the names of the items in the database as a list
   const allItemNames = await db
-    .select({ name: items.name })
+    .select({ name: items.name, type: items.type })
     .from(items);
 
   return {

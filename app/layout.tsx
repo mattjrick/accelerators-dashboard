@@ -3,9 +3,9 @@ import './globals.css';
 import { Analytics } from '@vercel/analytics/react';
 
 export const metadata = {
-  title: 'Accelerators Dashboard',
+  title: 'Kainos Catalogue',
   description:
-    'Manage and view the accelerators within Kainos'
+    'Manage and view the services and accelerators within Kainos'
 };
 
 export default function RootLayout({
